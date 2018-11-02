@@ -7,41 +7,53 @@
 |                                                                           |
 |__________________________________________________________________________*/
 
-let userNumber = prompt("Beräkna fakultet!\nSkriv ett valfritt heltal:", "1 - 1000");
+// Maxtal
+let maxNumber = 1000;
+
+let userNumber = prompt("Beräkna fakultet!\nSkriv ett valfritt heltal:", "1 - " + maxNumber);
 
 // Loop som kollar att användarens inmatning är korrekt
-
 while(true) {
   
-    // Om användarens inmatning är en string eller tom string får hen försöka igen
-    if (isNaN(userNumber) ||  userNumber === "") { 
-        alert("Oj, något gick fel!");
-        userNumber = prompt("Skriv ett heltal i siffror:");
+    // Om användarens inmatning är en string, tom string eller decimaltal, får hen försöka igen
+    if (isNaN(userNumber) ||  userNumber === "" || Number.isInteger(+userNumber) === false) { 
+        alert("Obs! Felaktig inmatning");
+        userNumber = prompt("Skriv ett heltal mellan 1 och " + maxNumber);
     }
-    // Om användarens inmatning är lägre än 0 och högre än 1000 får hen skriva ett nytt tal
-    else if (userNumber < 0 || userNumber > 1000) {
-        alert("Obs! Talet måste vara mellan 1 och 1000!")
-        userNumber = prompt("Skriv ett nytt tal:");
+    // Om användarens tal är minus eller över maxtalet, får hen försöka igen
+    else if (userNumber < 0 || maxNumber < userNumber) {
+        alert("Obs! Talet måste vara mellan 1 och " + maxNumber);
+        userNumber = prompt("Skriv ett nytt tal mellan 1 och " + maxNumber);
     }
     // Användaren kan avsluta programmet genom att trycka på avbryt
-    else if (userNumber === null) { 
-        alert("Avslutar");
+    else if (userNumber === null) {
         document.getElementById("theResult").innerHTML = "Tryck F5 för att beräkna fakultet!";
         break;
     }
-    // Här anropar jag min funktion och utskriften sker på skärmen
     else {
-        setTimeout(function(){
-            alert("Tack! Nu ska vi beräkna " + userNumber + "!");
-            document.getElementById("theResult").innerHTML = (userNumber + "! = " + factorial(userNumber));
-        }, 1000);
+        let factorialNumber = factorial(userNumber);
+        // Om talet är ändligt kan resultatet visas på skärmen
+        if (isFinite(factorialNumber)){
+            setTimeout(function(){
+                alert("Tack! Nu ska vi beräkna " + userNumber + "!");
+                document.getElementById("theResult").innerHTML = (userNumber + "! = " + factorialNumber);
+            }, 1000);
         break; 
+        }
+        // Om talet är oändligt kommer maxvärdet att ändras och användaren får skriva nytt tal
+        else {
+            alert(factorialNumber + "! Talet " + userNumber + " är för stort för att beräkna!");
+            maxNumber = userNumber;
+            userNumber = prompt("Skriv ett nytt tal mellan 1 och " + maxNumber);
+        }
     }     
 }
-
 // Loop slut
 
-// Rekursiv funktion som beräknar fakultet
+/*______________________________________________
+|                                               |
+|   Rekursiv funktion som beräknar fakultet     |
+|______________________________________________*/
 
 function factorial(numb){
     if (numb == 0) // 0! = 1
